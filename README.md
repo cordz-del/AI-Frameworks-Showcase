@@ -98,3 +98,108 @@ jobs:
         pytest
 ```
 This GitHub Actions workflow sets up a Python environment, installs dependencies, and runs tests whenever code is pushed to the main branch or a pull request is made.
+
+### LangChain RAG Example
+```python
+from langchain.chains import RetrievalQA
+from langchain.vectorstores import Chroma
+from langchain.embeddings import OpenAIEmbeddings
+
+# Initialize the vector store with Chroma
+vector_store = Chroma("my_collection", embeddings=OpenAIEmbeddings())
+
+# Create a RetrievalQA chain
+qa_chain = RetrievalQA.from_vector_store(vector_store)
+
+# Ask a question and get an answer
+question = "What is the capital of France?"
+answer = qa_chain.run(question)
+
+print(f"Question: {question}")
+print(f"Answer: {answer}")
+```
+This example demonstrates how to use LangChain for retrieval-augmented generation, integrating a vector store with Chroma and OpenAI embeddings.
+
+### AWS SageMaker Model Deployment Example
+```python
+import boto3
+from sagemaker import Session
+from sagemaker.tensorflow import TensorFlowModel
+
+# Initialize a SageMaker session
+sagemaker_session = Session()
+
+# Define the S3 path to the model artifact
+model_artifact = "s3://my-bucket/my-model.tar.gz"
+
+# Create a TensorFlow model
+model = TensorFlowModel(
+    model_data=model_artifact,
+    role="arn:aws:iam::123456789012:role/SageMakerRole",
+    framework_version="2.3",
+    sagemaker_session=sagemaker_session
+)
+
+# Deploy the model to a SageMaker endpoint
+predictor = model.deploy(
+    initial_instance_count=1,
+    instance_type="ml.m5.large"
+)
+
+print("Model deployed successfully.")
+```
+This example demonstrates how to deploy a TensorFlow model to an AWS SageMaker endpoint.
+
+### FastAPI Example
+```python
+from fastapi import FastAPI
+
+app = FastAPI()
+
+@app.get("/")
+def read_root():
+    return {"message": "Hello, World!"}
+
+@app.get("/items/{item_id}")
+def read_item(item_id: int):
+    return {"item_id": item_id, "value": "This is item " + str(item_id)}
+
+# To run the app, use the command: uvicorn main:app --reload
+```
+This example demonstrates how to create a simple API with FastAPI, including a root endpoint and a parameterized endpoint.
+
+### Dockerfile Example for Python Application
+```Dockerfile
+# Use the official Python image as a base
+FROM python:3.8-slim
+
+# Set the working directory in the container
+WORKDIR /app
+
+# Copy the current directory contents into the container
+COPY . .
+
+# Install the required Python packages
+RUN pip install -r requirements.txt
+
+# Command to run the application
+CMD ["python", "app.py"]
+```
+This Dockerfile sets up a Python environment, installs dependencies, and runs a Python application.
+
+### Terraform AWS EC2 Instance Example
+```hcl
+provider "aws" {
+  region = "us-west-2"
+}
+
+resource "aws_instance" "web" {
+  ami           = "ami-0c55b159cbfafe1f0"  # Amazon Linux 2 AMI
+  instance_type = "t2.micro"
+
+  tags = {
+    Name = "TerraformExample"
+  }
+}
+```
+This Terraform configuration provisions an AWS EC2 instance using the Amazon Linux 2 AMI in the us-west-2 region.
